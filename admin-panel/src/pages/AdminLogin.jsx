@@ -39,7 +39,7 @@ function AdminLogin({ onLoginSuccess }) {
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Admin Portal</h2>
         <div className="input-group">
-          <label htmlFor="email">Admin Email</label>
+          <label htmlFor="email">Email</label>
           <input
             id="email"
             type="email"
