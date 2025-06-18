@@ -1,48 +1,42 @@
+// src/pages/Providers.jsx
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Table.css';
 
 const Providers = () => {
-    // State for data from APIs - will hold the full lists
+    const navigate = useNavigate();
+
+    // --- All state and logic remains exactly the same as before ---
     const [providers, setProviders] = useState([]);
     const [categories, setCategories] = useState([]);
     const [subcategories, setSubcategories] = useState([]);
-
-    // State for all filter controls
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedSubcategory, setSelectedSubcategory] = useState('');
-
-    // State for loading and errors
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    // A single useEffect to fetch ALL data on initial component mount
     useEffect(() => {
         const fetchAllData = async () => {
             setLoading(true);
             try {
                 const token = localStorage.getItem('adminToken');
                 const headers = { 'Authorization': `Bearer ${token}` };
-
                 const [providersRes, categoriesRes, subcategoriesRes] = await Promise.all([
                     fetch('http://localhost:8080/api/admin/providers', { headers }),
                     fetch('http://localhost:8080/api/admin/categories', { headers }),
                     fetch('http://localhost:8080/api/admin/subcategories', { headers }),
                 ]);
-
                 if (!providersRes.ok || !categoriesRes.ok || !subcategoriesRes.ok) {
                     throw new Error('Failed to fetch initial page data');
                 }
-
                 const providersData = await providersRes.json();
                 const categoriesData = await categoriesRes.json();
                 const subcategoriesData = await subcategoriesRes.json();
-
                 setProviders(providersData);
                 setCategories(categoriesData);
                 setSubcategories(subcategoriesData);
-
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -50,9 +44,8 @@ const Providers = () => {
             }
         };
         fetchAllData();
-    }, []); // Runs only once on mount
+    }, []);
 
-    // --- Derived data for dropdowns ---
     const uniqueCities = useMemo(() => {
         const cities = providers.map(p => p.city).filter(Boolean);
         return [...new Set(cities)];
@@ -63,24 +56,17 @@ const Providers = () => {
         return subcategories.filter(sub => sub.category_id == selectedCategory);
     }, [selectedCategory, subcategories]);
 
-    // --- Comprehensive client-side filtering logic ---
     const filteredProviders = providers
-        .filter(provider => { // 1. Text search filter
+        .filter(provider => {
             const name = provider.providerName.toLowerCase();
             const email = provider.email.toLowerCase();
             const query = searchQuery.toLowerCase();
             return name.includes(query) || email.includes(query);
         })
-        .filter(provider => { // 2. City filter
-            return selectedCity ? provider.city === selectedCity : true;
-        })
-        .filter(provider => { // 3. Category/Subcategory filter
-            if (!selectedCategory && !selectedSubcategory) {
-                return true; // No category filters applied
-            }
-
+        .filter(provider => selectedCity ? provider.city === selectedCity : true)
+        .filter(provider => {
+            if (!selectedCategory && !selectedSubcategory) return true;
             const providerSubcategoryIds = provider.subcategories?.map(s => s.subcategory_id) ?? [];
-
             if (selectedSubcategory) {
                 return providerSubcategoryIds.includes(Number(selectedSubcategory));
             }
@@ -91,22 +77,14 @@ const Providers = () => {
             return true;
         });
 
-
     if (loading) return <p className="loading-message">Loading...</p>;
     if (error) return <p className="error-message">Error: {error}</p>;
 
     return (
         <div className="page-container">
             <h1>Provider Management</h1>
-
             <div className="filter-container">
-                <input
-                    type="text"
-                    placeholder="Search by name or email..."
-                    className="search-input"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                />
+                <input type="text" placeholder="Search by name or email..." className="search-input" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                 <select className="filter-select" value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)}>
                     <option value="">All Cities</option>
                     {uniqueCities.map(city => <option key={city} value={city}>{city}</option>)}
@@ -142,10 +120,13 @@ const Providers = () => {
                             <td>{provider.city ?? 'N/A'}</td>
                             <td>{provider.isVerified ? 'Yes' : 'No'}</td>
                             <td>{provider.is_banned ? 'Yes' : 'No'}</td>
-                            <td>
+                            <td className="actions-cell">
+                                {/* --- CORRECTED ACTIONS COLUMN --- */}
                                 <button className="btn btn-success">Verify</button>
                                 <button className="btn btn-warning">Suspend</button>
                                 <button className="btn btn-danger">Delete</button>
+                                <button className="btn btn-info" onClick={() => navigate(`/provider/${provider.providerId}/gallery`)}>Gallery</button>
+                                 <button className="btn btn-secondary" onClick={() => navigate(`/provider/${provider.providerId}/status`)}>Status</button>
                             </td>
                         </tr>
                     ))}

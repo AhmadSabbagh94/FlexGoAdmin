@@ -62,7 +62,13 @@
 .btn-danger { background-color: #dc3545; }
 .btn-warning { background-color: #ffc107; }
 .btn-success { background-color: #28a745; }
+.btn-secondary {
+    background-color: #6c757d; /* A standard slate gray color */
+}
 
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
 /* Add these new styles to the end of src/styles/Table.css */
 
 .filter-container {
@@ -130,4 +136,15 @@
 
 .status-paid {
     background-color: #17a2b8; /* Teal */
+}
+
+/* Add these new styles to the end of src/styles/Table.css */
+
+.btn-info {
+    background-color: #17a2b8; /* Teal */
+}
+
+.actions-cell {
+    /* Prevents buttons from wrapping on smaller screens if possible */
+    white-space: nowrap;
 }
