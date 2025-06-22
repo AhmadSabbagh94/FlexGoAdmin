@@ -127,6 +127,7 @@ const Providers = () => {
                                 <button className="btn btn-danger">Delete</button>
                                 <button className="btn btn-info" onClick={() => navigate(`/provider/${provider.providerId}/gallery`)}>Gallery</button>
                                  <button className="btn btn-secondary" onClick={() => navigate(`/provider/${provider.providerId}/status`)}>Status</button>
+                                 <button className="btn btn-store" onClick={() => navigate(`/provider/${provider.providerId}/products`)}>Store</button>
                             </td>
                         </tr>
                     ))}

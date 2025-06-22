@@ -15,6 +15,8 @@ import Categories from './pages/Categories'; // <-- Import the new page
 import Subscriptions from './pages/Subscriptions'; // <-- Import the new page
 import ProviderGallery from './pages/ProviderGallery'; // <-- Import new page
 import ProviderStatus from './pages/ProviderStatus'; // <-- Import new page
+import Products from './pages/Products'; // <-- Import the new page
+
 // Import Shared Components
 import Sidebar from './components/Sidebar';
 
@@ -44,6 +46,7 @@ function App() {
             <Route path="/providers" element={<Providers />} />
             <Route path="/provider/:providerId/gallery" element={<ProviderGallery />} />
             <Route path="/provider/:providerId/status" element={<ProviderStatus />} />
+             <Route path="/provider/:providerId/products" element={<Products />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/reviews" element={<Reviews />} />

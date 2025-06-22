@@ -69,6 +69,10 @@
 .btn-secondary:hover {
     background-color: #5a6268;
 }
+
+.btn-store {
+    background-color: #0000FF; /* A standard slate gray color */
+}
 /* Add these new styles to the end of src/styles/Table.css */
 
 .filter-container {
